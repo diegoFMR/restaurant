@@ -3,7 +3,7 @@ import { listReservations, listTables } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationCard from "../reservations/ReservationCard";
 import TableCard from "../table/TableCard";
-import { formatAsDate } from "../utils/date-time";
+import { formatAsDate, next, previous } from "../utils/date-time";
 
 /**
  * Defines the dashboard page.
@@ -15,6 +15,7 @@ function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(formatAsDate(date));
 
 
@@ -43,14 +44,49 @@ function Dashboard({ date }) {
     return () => abortController.abort()
   }, [date]);
 
-  async function searchReservation() {
-    const abortController = new AbortController();
-    try{
-      const response = await listReservations({ date: selectedDate }, abortController.signal);
-      setReservations(response);
-    }catch(e){
-      setReservationsError({error: "Couldn't load the records"});
+  async function nextDay() {
+
+    if(loading === false){
+
+      const abortController = new AbortController();
+      try{
+
+        setLoading(true);
+        setSelectedDate(next(selectedDate));
+
+        const response = await listReservations({ date: selectedDate }, abortController.signal);
+        setReservations(response);
+      }catch(e){
+        console.log(e)
+        setReservationsError({message: "Couldn't load the records"});
+      }
+
+      setLoading(false);
     }
+    
+    
+  }
+
+  async function previousDay() {
+
+    if(loading === false){
+
+      const abortController = new AbortController();
+      try{
+
+        setLoading(true);
+        setSelectedDate(previous(selectedDate));
+
+        const response = await listReservations({ date: selectedDate }, abortController.signal);
+        setReservations(response);
+      }catch(e){
+        console.log(e)
+        setReservationsError({message: "Couldn't load the records"});
+      }
+
+      setLoading(false);
+    }
+    
     
   }
 
@@ -76,8 +112,9 @@ function Dashboard({ date }) {
         <h4 className="mb-0">Reservation</h4>
       </div>
       <div>
-        <input value={selectedDate} onChange={(e)=>setSelectedDate(e.target.value)} type="date" />
-        <p className="btn blue" onClick={searchReservation}>Search reservation</p>
+      <button className="btn blue" disabled={loading} onClick={nextDay}>Next day</button>
+      <button className="btn blue" disabled={loading} onClick={previousDay}>Previous day</button>
+
       </div>
 
       <ErrorAlert error={reservationsError} />
