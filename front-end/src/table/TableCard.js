@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect } from "react";
 import { destroy } from "../utils/api";
 /**
  * Defines the TableCard page.
@@ -8,12 +8,28 @@ import { destroy } from "../utils/api";
  */
 function TableCard({data, refresh}) {
   const {table_name, table_id, reservation} = data;
+  let abortController = new AbortController(); 
   
+  // const cleaning = useMemo (()=>{
+  //   abortController.abort();
+  // },[abortController]);
+
+  useEffect(()=>{
+
+
+
+    return cleanUp
+  });
+
+  function cleanUp(){
+    abortController.abort();
+  }
+
   async function onClick(id){
 
     if(window.confirm('Is this table ready to seat new guests?')){
       try{
-        const abortController = new AbortController();
+        
         const response = await destroy(`tables/${id}/seat`,abortController.signal);
 
         if(response.status === 400){

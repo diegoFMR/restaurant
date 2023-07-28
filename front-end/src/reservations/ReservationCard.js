@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect, useMemo} from "react";
 import { sendUpdate } from "../utils/api";
 import generator from "../utils/generator";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
@@ -13,6 +13,13 @@ function ReservationCard({data, refresh}) {
   const [status, setStatus] = useState(data.status);
   const history = useHistory();
   let btn;
+  //useMemo to avoid reference update and be able to use it on useEffect return
+  const abortController = useMemo(()=>new AbortController(),[]);
+  //returning the callback on useEffect to emulate componentDidMount
+  useEffect(()=>{
+    
+   return ()=> abortController.abort()
+  },[abortController]);
 
   function generateBtn(){
 
@@ -33,7 +40,7 @@ function ReservationCard({data, refresh}) {
   async function cancelClick(){
     if(window.confirm('Do you want to cancel this reservation?')){
       try{
-        const abortController = new AbortController();
+        
         const statusValue = generator.status.CANCELED;
         const statusObj = {data: {status: statusValue}};     
         await sendUpdate(statusObj, 'reservations/'+reservation_id+'/status', abortController.signal);

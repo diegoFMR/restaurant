@@ -2,11 +2,10 @@ import React from "react";
 
 import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
-import ReservationPage from "./ReservationPage";
-import EditPage from "./EditPage";
+import ReservationForm from "../reservations/ReservationForm";
 import Form from "../table/Form";
 import NotFound from "./NotFound";
-import Reservation from "../reservations/Reservation";
+import SeatPage from "./SeatPage";
 import Search from "./Search";
 import { today } from "../utils/date-time";
 
@@ -33,13 +32,13 @@ function Routes() {
         <Search/>
       </Route>
       <Route exact path="/reservations/:reservation_id/seat">
-        <Reservation/>
+        <SeatPage/>
       </Route>
       <Route exact path="/reservations/new">
-        <ReservationPage/>
+        <ReservationForm/>
       </Route>
       <Route exact path="/reservations/:reservation_id/edit">
-        <EditPage/>
+        <ReservationForm/>
       </Route>
       <Route>
         <NotFound />

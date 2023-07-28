@@ -112,8 +112,8 @@ function Dashboard({ date }) {
         <h4 className="mb-0">Reservation</h4>
       </div>
       <div>
-      <button className="btn blue" disabled={loading} onClick={nextDay}>Next day</button>
       <button className="btn blue" disabled={loading} onClick={previousDay}>Previous day</button>
+      <button className="btn blue" disabled={loading} onClick={nextDay}>Next day</button>
 
       </div>
 

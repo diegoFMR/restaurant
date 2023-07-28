@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo  } from "react";
 import { listTables, getReservation, sendUpdate } from "../utils/api";
-import ErrorAlert from "../layout/ErrorAlert";
+import ErrorAlert from "./ErrorAlert";
 import TableSelect from "../table/TableSelect";
 import {useParams, useHistory} from "react-router-dom";
 /**
@@ -16,9 +16,10 @@ function Reservation() {
   const [reservation, setReservation] = useState('');
   const {reservation_id} = useParams();//Id from params
   const history = useHistory();
-
+  //useMemo to avoid reference update and be able to use it on useEffect return
+  const abortController = useMemo(()=>new AbortController(),[]);
+  
   useEffect(()=>{
-    const abortController = new AbortController();
 
     async function loadTables() {
       try{
@@ -34,13 +35,12 @@ function Reservation() {
     loadTables();
 
     return () => abortController.abort();
-  }, [reservation_id]);
+  }, [reservation_id, abortController]);
 
   async function onSubmit(e){
     e.preventDefault();
     try{
       if(table !== ""){
-        const abortController = new AbortController();
         const data = {reservation_id: reservation.reservation_id, people: reservation.people};
         const response = await sendUpdate({data: data}, `tables/${table}/seat`,abortController.signal);
         
@@ -55,7 +55,7 @@ function Reservation() {
       }
         
     }catch(e){
-        console.log(e);
+
     }
   }
 
