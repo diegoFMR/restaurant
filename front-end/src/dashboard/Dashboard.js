@@ -16,7 +16,8 @@ function Dashboard({ date }) {
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(formatAsDate(date));
+  const param = new URLSearchParams(window.location.search).get('date');
+  const [selectedDate, setSelectedDate] = useState(param? param: formatAsDate(date));
 
 
   useEffect(()=>{
