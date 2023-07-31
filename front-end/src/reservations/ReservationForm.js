@@ -57,7 +57,7 @@ function ReservationForm() {
   }
 
   function dateValidation(){
-    const receivedDate = new Date(reserveDate);
+    const receivedDate = new Date(`${reserveDate} ${reserveTime}`);
     const todayDate = new Date();
     const errors = [];//array containing the error messages
     let valid = true;//value will be false if a validation fails
@@ -66,11 +66,32 @@ function ReservationForm() {
       errors.push("Only future dates are accepted");
       valid = false;
     }
-
-    if(receivedDate.getDay() === 1){
+    
+    if(receivedDate.getDay() === 2){
       errors.push("Cannot make reservation for Tuesdays");
       valid = false;
     }
+
+    // const date = new Date(`${reservation_date} ${reservation_time}`);
+     const hour = receivedDate.getHours();
+     const minutes = receivedDate.getMinutes();
+    
+    /* Validate time frames of reservation */
+     if(hour === 10){
+       if(minutes < 30){
+        errors.push("Reservation time must be after 10:30 AM");
+        valid = false;
+       }
+     }else if(hour === 21){
+       if(minutes > 30){
+        errors.push("Reservation time must be before 9:30 PM");
+        valid = false;
+       }
+     }else if(hour < 10 || hour >= 22){
+      errors.push("Reservation time must be within schedule (10:30 AM - 9:30 PM)");
+      valid = false;
+     }
+
 
     if(!valid){
       const message = errors.map(value=><p key={value}>{value}</p>);//concatenating error messages

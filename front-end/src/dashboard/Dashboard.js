@@ -52,9 +52,10 @@ function Dashboard({ date }) {
       try{
 
         setLoading(true);
-        setSelectedDate(next(selectedDate));
+        const nextDay = next(selectedDate);
+        setSelectedDate(nextDay);
 
-        const response = await listReservations({ date: selectedDate }, abortController.signal);
+        const response = await listReservations({ date: nextDay }, abortController.signal);
         setReservations(response);
       }catch(e){
         console.log(e)
@@ -75,9 +76,10 @@ function Dashboard({ date }) {
       try{
 
         setLoading(true);
-        setSelectedDate(previous(selectedDate));
+        const previousDay = previous(selectedDate);
+        setSelectedDate(previousDay);
 
-        const response = await listReservations({ date: selectedDate }, abortController.signal);
+        const response = await listReservations({ date: previousDay }, abortController.signal);
         setReservations(response);
       }catch(e){
         console.log(e)
@@ -113,6 +115,7 @@ function Dashboard({ date }) {
       </div>
       <div>
       <button className="btn blue" disabled={loading} onClick={previousDay}>Previous day</button>
+      { selectedDate}
       <button className="btn blue" disabled={loading} onClick={nextDay}>Next day</button>
 
       </div>
