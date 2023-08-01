@@ -46,7 +46,7 @@ async function validateTime(req, res, next) {
       return res.status(400).send({error: "Can only set up future reservations"})
     }
     //No Tuesdays validation
-    if(receivedDate.getDay() === 1){
+    if(receivedDate.getDay() === 2){
       return res.status(400).send({error: "Tuesdays are closed"})
     }
     
