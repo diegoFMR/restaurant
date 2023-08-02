@@ -65,11 +65,16 @@ function ReservationCard({data, refresh}) {
         <div className="actions-container">
           {btn}
 
-          <p
+        {
+
+          (status === generator.status.CANCELED || status === generator.status.FINISHED)?
+          null: <p
           className="btn green"
           onClick={()=>history.push(`/reservations/${reservation_id}/edit`)}
           href={`/reservations/${reservation_id}/edit`}
           >Edit</p>
+        }
+          
           {
             status === generator.status.BOOKED? 
             <p 

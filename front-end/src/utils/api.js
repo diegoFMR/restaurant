@@ -79,7 +79,7 @@ export async function insertReservation(reservation, signal) {
     body: JSON.stringify(reservation),
     signal,
   };
-  return await fetchJson(url, options, {});
+  return await fetch(url, options, {});
 }
 
 /**

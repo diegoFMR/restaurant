@@ -140,16 +140,17 @@ function ReservationForm() {
           reserveObj.reservation_id = params.reservation_id;
 
           response = await sendUpdate({data: reserveObj}, 'reservations/'+reserveObj.reservation_id, abortController.signal);
-          msg = "Something went wrong. Please try again";
+         
         }else{
           response = await insertReservation( {data: reserveObj} ,abortController.signal);
-          msg = "The time has to be after 10:30 AM and before 9:30 PM";
+          
         }
 
-        if(!response){
-          setReservationsError({message: msg});
-        }else{
+        if(response.status === 200 || response.status === 202 || response.status === 201){
           history.push(`/dashboard?date=${reserveDate}`);
+        }else{
+          msg = await response.json();
+          setReservationsError({message: msg.error});
         }
         
       }

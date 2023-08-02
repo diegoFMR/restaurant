@@ -1,6 +1,6 @@
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const connection = require("../db/connection");
-const { isValidDate, validHhMm } = require("../utils/date-time");
+const { isValidDate, validHhMm, dateToString } = require("../utils/date-time");
 /**
  * time validation handler for reservation
  */
@@ -41,9 +41,14 @@ async function validateTime(req, res, next) {
 
     const receivedDate = new Date(res.locals.reservation_date);
     const todayDate = new Date();
-
-    if(receivedDate < todayDate){
+    //future date validation
+    if(date < todayDate){
       return res.status(400).send({error: "Can only set up future reservations"})
+    }
+
+    //Same day validation
+    if(dateToString(date) == dateToString(todayDate)){
+      if(hour < 12)return res.status(400).send({error: "Same day reservations have to be after noon"})
     }
     //No Tuesdays validation
     if(receivedDate.getDay() === 2){
